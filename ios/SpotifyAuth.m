@@ -21,10 +21,6 @@
 
 @implementation SpotifyAuth
 
-- (dispatch_queue_t)methodQueue
-{
-    return dispatch_get_main_queue();
-}
 RCT_EXPORT_MODULE()
 
 //Start Auth process
@@ -441,8 +437,10 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
     SpotifyLoginViewController *webView1 =[[SpotifyLoginViewController alloc] initWithURL:authURL];
     UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController: webView1];
     
+    dispatch_async(dispatch_get_main_queue(), ^{
     //Present the webView over the rootView
     [self.rootViewController presentViewController: controller animated:YES completion:nil];
+    });
     
     
     return YES;
