@@ -15,7 +15,7 @@
 #import <React/RCTEventEmitter.h>
 #endif
 
-@interface SpotifyAuth : NSObject <RCTBridgeModule>
+@interface SpotifyAuth : RCTEventEmitter <RCTBridgeModule>
 @property (nonatomic, strong) NSString *myScheme;
 @property (nonatomic, strong) UIViewController *rootViewController;
 -(void)urlCallback: (NSURL *)url;

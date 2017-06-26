@@ -46,10 +46,15 @@ RCT_EXPORT_METHOD(setClientID:(NSString *) clientID
     
     //Observer for successful login
     if (!self.hasListeners) {
-    [center addObserverForName:@"SPLoginResponse" object:nil queue:nil usingBlock:^(NSNotification *notification)
-     {
-         [self deliverNotification:notification];
-     }];
+        [center addObserverForName:@"SPLoginResponse" object:nil queue:nil usingBlock:^(NSNotification *notification)
+         {
+             if (notification.userInfo[@"error"] != nil) {
+                 block(@[notification.userInfo]);
+                 //[self deliverNotification:notification];
+             } else {
+                 block(@[notification.userInfo]);
+             }
+         }];
     }
     
     [self startAuth:clientID setRedirectURL:redirectURL setRequestedScopes:requestedScopes];
@@ -159,7 +164,7 @@ RCT_EXPORT_METHOD(setVolume:(CGFloat)volume callback:(RCTResponseSenderBlock)blo
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -174,7 +179,7 @@ RCT_EXPORT_METHOD(setTargetBitrate:(NSInteger)bitrate callback:(RCTResponseSende
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -189,7 +194,7 @@ RCT_EXPORT_METHOD(seekToOffset:(CGFloat)offset callback:(RCTResponseSenderBlock)
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -204,7 +209,7 @@ RCT_EXPORT_METHOD(setIsPlaying:(BOOL)playing callback:(RCTResponseSenderBlock)bl
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -233,7 +238,7 @@ RCT_EXPORT_METHOD(playURIs:(NSArray *)uris withOptions:(NSDictionary *)options c
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -254,7 +259,7 @@ RCT_EXPORT_METHOD(replaceURIs:(NSArray *)uris withCurrentTrack:(int)index callba
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -269,7 +274,7 @@ RCT_EXPORT_METHOD(playURI:(NSString *)uri callback:(RCTResponseSenderBlock)block
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -284,7 +289,7 @@ RCT_EXPORT_METHOD(queueURI:(NSString *)uri callback:(RCTResponseSenderBlock)bloc
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -299,7 +304,7 @@ RCT_EXPORT_METHOD(stop:(RCTResponseSenderBlock)block)
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -314,7 +319,7 @@ RCT_EXPORT_METHOD(skipNext:(RCTResponseSenderBlock)block)
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -329,7 +334,7 @@ RCT_EXPORT_METHOD(skipPrevious:(RCTResponseSenderBlock)block)
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[error]);
+            block(@[[NSNull null]]);
             [self checkSession];
         }
         return;
@@ -440,8 +445,8 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
     UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController: webView1];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-    //Present the webView over the rootView
-    [self.rootViewController presentViewController: controller animated:YES completion:nil];
+        //Present the webView over the rootView
+        [self.rootViewController presentViewController: controller animated:YES completion:nil];
     });
     
     

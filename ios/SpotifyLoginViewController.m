@@ -29,7 +29,7 @@
     //This creates a Done Button on the top left corner of the view
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                           target:self
-                                                                                          action:@selector(hideTheThing)];
+                                                                                          action:@selector(cancelLogin)];
   
     // Load the login URL into the WKWebView
     [_webView loadRequest:[NSURLRequest requestWithURL:_login]];

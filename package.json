@@ -1,16 +1,22 @@
-
 {
   "name": "react-native-spotify-ios",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Native module for using Spotify iOS SDK in React Native",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maelstroms38/react-native-spotify-ios"
+  },
   "keywords": [
-    "react-native"
+    "react-native",
+    "spotify",
+    "sdk",
+    "ios"
   ],
-  "author": "",
+  "author": "maelstroms38",
   "license": "",
   "peerDependencies": {
     "react-native": "^0.41.2"
