@@ -57,7 +57,9 @@ RCT_EXPORT_METHOD(setClientID:(NSString *) clientID
          }];
     }
     
-    [self startAuth:clientID setRedirectURL:redirectURL setRequestedScopes:requestedScopes];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self startAuth:clientID setRedirectURL:redirectURL setRequestedScopes:requestedScopes];
+    });
 }
 
 /////////////////////////////////
