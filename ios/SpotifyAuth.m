@@ -17,11 +17,19 @@
 @property (nonatomic, strong) NSArray *requestedScopes;
 @property (nonatomic, strong) NSString *headerString;
 
+@property (nonatomic, assign) BOOL *hasListeners;
 @end
 
 @implementation SpotifyAuth
 
+@synthesize hasListeners = _hasListeners;
+
 RCT_EXPORT_MODULE()
+
+- (NSArray<NSString *> *)supportedEvents {
+    NSString *SPLoginResponse = @"SPLoginResponse";
+    return @[SPLoginResponse];
+}
 
 //Start Auth process
 RCT_EXPORT_METHOD(setClientID:(NSString *) clientID
@@ -37,18 +45,12 @@ RCT_EXPORT_METHOD(setClientID:(NSString *) clientID
     [sharedManager setMyScheme:redirectURL];
     
     //Observer for successful login
-    [center addObserverForName:@"loginRes" object:nil queue:nil usingBlock:^(NSNotification *notification)
+    if (!self.hasListeners) {
+    [center addObserverForName:@"SPLoginResponse" object:nil queue:nil usingBlock:^(NSNotification *notification)
      {
-         //if there is an error key in the userInfo dictionary send the error, otherwise null
-         if(notification.userInfo[@"error"] != nil){
-             block(@[notification.userInfo[@"error"]]);
-         } else if (notification.userInfo[@"accessToken"] != nil) {
-             block(@[notification.userInfo]);
-         } else {
-             block(@[[NSNull null]]);
-         }
-         
+         [self deliverNotification:notification];
      }];
+    }
     
     [self startAuth:clientID setRedirectURL:redirectURL setRequestedScopes:requestedScopes];
 }
@@ -582,8 +584,7 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
                                 loginRes[@"accessToken"] = [dict valueForKey:@"access_token"];
                                 loginRes[@"expires"] = [dict valueForKey:@"expires_in"];
                                 loginRes[@"refreshToken"] = [dict valueForKey:@"refresh_token"];
-                                [center postNotificationName:@"loginRes" object:nil userInfo:loginRes];
-                                [center removeObserver:self name:@"loginRes" object:nil];
+                                [center postNotificationName:@"SPLoginResponse" object:nil userInfo:loginRes];
                             }
                         }
                     }];
@@ -636,5 +637,26 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
     }
     return sharedMyManager;
 }
+#pragma mark - Notification handlers
+
+// Will be called when this module's first listener is added.
+-(void)startObservingSpotify {
+    self.hasListeners = YES;
+    // Set up any upstream listeners or background tasks as necessary
+}
+
+// Will be called when this module's last listener is removed, or on dealloc.
+-(void)stopObservingSpotify {
+    self.hasListeners = NO;
+    // Remove upstream listeners, stop unnecessary background tasks
+}
+
+- (void)deliverNotification:(NSNotification *)notification {
+    if (self.hasListeners) { // Only send events if anyone is listening
+        //NSLog(@"Name: %@, Object: %@", notification.name, notification.userInfo);
+        [self sendEventWithName:notification.name body:notification.userInfo];
+    }
+}
+
 
 @end

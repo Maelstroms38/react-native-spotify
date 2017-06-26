@@ -52,8 +52,13 @@
   _login = url;
   return self;
 }
-
-
+- (void)cancelLogin {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    NSMutableDictionary *loginRes =  [NSMutableDictionary dictionary];
+    loginRes[@"error"] = @"Login cancelled.";
+    [center postNotificationName:@"SPLoginResponse" object:self userInfo:loginRes];
+    [self.navigationController dismissViewControllerAnimated:true completion:nil];
+}
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
       SpotifyAuth *sharedManager = [SpotifyAuth sharedManager];
       NSURL *url = navigationAction.request.URL;
