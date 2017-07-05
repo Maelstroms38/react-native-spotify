@@ -6,7 +6,7 @@
 //  Copyright © 2016 Facebook. All rights reserved.
 //
 
-#import <Spotify/Spotify.h>
+#import "Spotify.h"
 #import "SpotifyAuth.h"
 #import "SpotifyLoginViewController.h"
 
