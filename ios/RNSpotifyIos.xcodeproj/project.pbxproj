@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4CCA1DBB1EFD684B003C68F9 /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CCA1DB61EFD684B003C68F9 /* Spotify.framework */; };
 		4CCA1DBC1EFD684B003C68F9 /* SpotifyAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA1DB81EFD684B003C68F9 /* SpotifyAuth.m */; };
 		4CCA1DBD1EFD684B003C68F9 /* SpotifyLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA1DBA1EFD684B003C68F9 /* SpotifyLoginViewController.m */; };
 /* End PBXBuildFile section */
@@ -26,7 +25,6 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNSpotifyIos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSpotifyIos.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		4CCA1DB61EFD684B003C68F9 /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Spotify.framework; sourceTree = "<group>"; };
 		4CCA1DB71EFD684B003C68F9 /* SpotifyAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotifyAuth.h; sourceTree = "<group>"; };
 		4CCA1DB81EFD684B003C68F9 /* SpotifyAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpotifyAuth.m; sourceTree = "<group>"; };
 		4CCA1DB91EFD684B003C68F9 /* SpotifyLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotifyLoginViewController.h; sourceTree = "<group>"; };
@@ -38,7 +36,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CCA1DBB1EFD684B003C68F9 /* Spotify.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,7 +53,6 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				4CCA1DB61EFD684B003C68F9 /* Spotify.framework */,
 				4CCA1DB71EFD684B003C68F9 /* SpotifyAuth.h */,
 				4CCA1DB81EFD684B003C68F9 /* SpotifyAuth.m */,
 				4CCA1DB91EFD684B003C68F9 /* SpotifyLoginViewController.h */,
