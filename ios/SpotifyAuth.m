@@ -34,8 +34,7 @@ RCT_EXPORT_MODULE()
 //Start Auth process
 RCT_EXPORT_METHOD(setClientID:(NSString *) clientID
                   setRedirectURL:(NSString *) redirectURL
-                  setRequestedScopes:(NSArray *) requestedScopes
-                  callback:(RCTResponseSenderBlock)block)
+                  setRequestedScopes:(NSArray *) requestedScopes)
 {
     SpotifyAuth *sharedManager = [SpotifyAuth sharedManager];
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -46,14 +45,15 @@ RCT_EXPORT_METHOD(setClientID:(NSString *) clientID
     
     //Observer for successful login
     if (!self.hasListeners) {
+        [self startObservingSpotify];
         [center addObserverForName:@"SPLoginResponse" object:nil queue:nil usingBlock:^(NSNotification *notification)
          {
-             if (notification.userInfo[@"error"] != nil) {
-                 block(@[notification.userInfo]);
-                 //[self deliverNotification:notification];
-             } else {
-                 block(@[notification.userInfo]);
-             }
+             [self deliverNotification:notification];
+             //             if (notification.userInfo[@"error"] != nil) {
+             //                 block(@[notification.userInfo]);
+             //             } else {
+             //                 block(@[notification.userInfo]);
+             //             }
          }];
     }
     
