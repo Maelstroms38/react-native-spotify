@@ -587,10 +587,10 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
                                 [[sharedManager player] loginWithAccessToken:[session accessToken]];
                                 [self setPlayer:[sharedManager player]];
                                 
-                                loginRes[@"tokenType"] = [dict valueForKey:@"token_type"];
-                                loginRes[@"accessToken"] = [dict valueForKey:@"access_token"];
-                                loginRes[@"expires"] = [dict valueForKey:@"expires_in"];
-                                loginRes[@"refreshToken"] = [dict valueForKey:@"refresh_token"];
+                                loginRes[@"token_type"] = [dict valueForKey:@"token_type"];
+                                loginRes[@"access_token"] = [dict valueForKey:@"access_token"];
+                                loginRes[@"expires_in"] = [dict valueForKey:@"expires_in"];
+                                loginRes[@"refresh_token"] = [dict valueForKey:@"refresh_token"];
                                 [center postNotificationName:@"SPLoginResponse" object:nil userInfo:loginRes];
                             }
                         }
