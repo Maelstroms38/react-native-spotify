@@ -274,7 +274,7 @@ RCT_EXPORT_METHOD(playURI:(NSString *)uri callback:(RCTResponseSenderBlock)block
     SPTAudioStreamingController *sharedIn = [SPTAudioStreamingController sharedInstance];
     [sharedIn playURI:[NSURL URLWithString:uri] callback:^(NSError *error) {
         if(error == nil){
-            block(@[[NSNull null]]);
+            block(@[@(false)]);
         }else{
             NSMutableDictionary *loginRes =  [NSMutableDictionary dictionary];
             loginRes[@"error"] = @"Sorry, this track requires Spotify premium.";
