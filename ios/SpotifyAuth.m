@@ -276,7 +276,9 @@ RCT_EXPORT_METHOD(playURI:(NSString *)uri callback:(RCTResponseSenderBlock)block
         if(error == nil){
             block(@[[NSNull null]]);
         }else{
-            block(@[[NSNull null]]);
+            NSMutableDictionary *loginRes =  [NSMutableDictionary dictionary];
+            loginRes[@"error"] = @"Sorry, this track requires Spotify premium.";
+            block(@[loginRes]);
             [self checkSession];
         }
         return;
