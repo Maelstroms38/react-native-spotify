@@ -439,7 +439,7 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
     
     // Construct a login URL
     NSURL *loginURL = [[SPTAuth defaultInstance] loginURL];
-    NSURL *authURL = [self loginURLForClientId:clientID withRedirectURL:[NSURL URLWithString:redirectURL] scopes:scopes responseType:@"code"];
+    NSURL *authURL = [self loginURLForClientId:clientID withRedirectURL:[NSURL URLWithString:redirectURL] scopes:requestedScopes responseType:@"code"];
     [[SPTAuth defaultInstance] setTokenSwapURL:loginURL];
     [[SPTAuth defaultInstance] setTokenRefreshURL:loginURL];
     
@@ -463,7 +463,8 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
     //client_id, redirect_uri, state, scope, response_type.
     
     NSMutableString *req = [NSMutableString stringWithFormat:@"https://accounts.spotify.com/authorize?"];
-    NSString *authString = [NSString stringWithFormat:@"client_id=%@&response_type=code&redirect_uri=%@&scope=%@&show_dialog=true", clientId, redirectURL, scopes[0]];
+    NSString *scopeString = [scopes componentsJoinedByString:@"%20"];
+    NSString *authString = [NSString stringWithFormat:@"client_id=%@&response_type=code&redirect_uri=%@&scope=%@", clientId, redirectURL, scopeString];
     [req appendString:authString];
     NSURL *authURL = [NSURL URLWithString:req];
     
