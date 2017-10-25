@@ -10,7 +10,7 @@
 #import "SpotifyAuth.h"
 #import "SpotifyLoginViewController.h"
 
-@interface SpotifyAuth ()
+@interface SpotifyAuth () <SPTAudioStreamingDelegate>
 @property (nonatomic, strong) SPTSession *session;
 @property (nonatomic, strong) SPTAudioStreamingController *player;
 @property (nonatomic, strong) NSString *clientID;
@@ -344,7 +344,28 @@ RCT_EXPORT_METHOD(skipPrevious:(RCTResponseSenderBlock)block)
         return;
     }];
 }
-
+RCT_EXPORT_METHOD(checkSession:(RCTResponseSenderBlock)block)
+{
+    id sessionData = [[NSUserDefaults standardUserDefaults] objectForKey:@"spotifySession"];
+    SPTSession *sessionUserDefault = [NSKeyedUnarchiver unarchiveObjectWithData:sessionData];
+    if (self.player == nil) {
+        SPTAudioStreamingController *sharedIn = [SPTAudioStreamingController sharedInstance];
+        sharedIn.delegate = self;
+        [sharedIn startWithClientId:@"24772ed1f13e44458f4250f9769d8c45" error:nil];
+        [sharedIn loginWithAccessToken:sessionUserDefault.accessToken];
+    }
+    block(@[@([sessionUserDefault isValid])]);
+}
+RCT_EXPORT_METHOD(loginWithAccessToken:(NSString *)accessToken
+                  setClientID:(NSString *) clientID
+                  callback:(RCTResponseSenderBlock)block)
+{
+    SPTAudioStreamingController *sharedIn = [SPTAudioStreamingController sharedInstance];
+    sharedIn.delegate = self;
+    [sharedIn startWithClientId:clientID error:nil];
+    [sharedIn loginWithAccessToken:accessToken];
+    block(@[@(true)]);
+}
 /////////////////////////////////
 ////  END SPTAudioStreamingController
 /////////////////////////////////
@@ -440,6 +461,7 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
     // Construct a login URL
     NSURL *loginURL = [[SPTAuth defaultInstance] loginURL];
     NSURL *authURL = [self loginURLForClientId:clientID withRedirectURL:[NSURL URLWithString:redirectURL] scopes:requestedScopes responseType:@"code"];
+    [[SPTAuth defaultInstance] setSessionUserDefaultsKey:@"spotifySession"];
     [[SPTAuth defaultInstance] setTokenSwapURL:loginURL];
     [[SPTAuth defaultInstance] setTokenRefreshURL:loginURL];
     
@@ -582,13 +604,11 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
                                 
                                 _session = session;
                                 [self setSession: session];
+                                
                                 SPTAudioStreamingController *sharedIn = [SPTAudioStreamingController sharedInstance];
-                                [sharedIn startWithClientId:[SPTAuth defaultInstance].clientID error:nil];
-                                self.player = sharedIn;
-                                //keep this one
-                                [[SpotifyAuth sharedManager] setSession:session];
-                                [[sharedManager player] loginWithAccessToken:[session accessToken]];
-                                [self setPlayer:[sharedManager player]];
+                                sharedIn.delegate = self;
+                                [sharedIn startWithClientId:_clientID error:nil];
+                                [sharedIn loginWithAccessToken:session.accessToken];
                                 
                                 loginRes[@"token_type"] = [dict valueForKey:@"token_type"];
                                 loginRes[@"access_token"] = [dict valueForKey:@"access_token"];
@@ -614,8 +634,9 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
             if(error != nil){
                 NSLog(@"Error: %@", error);
                 //launch the login again
-                [sharedManager startAuth:sharedManager.clientID setRedirectURL:sharedManager.myScheme setRequestedScopes:sharedManager.requestedScopes];
+                //[sharedManager startAuth:sharedManager.clientID setRedirectURL:sharedManager.myScheme setRequestedScopes:sharedManager.requestedScopes];
             } else {
+                SpotifyAuth *sharedManager = [SpotifyAuth sharedManager];
                 [sharedManager setSession:session];
                 [[sharedManager player] loginWithAccessToken:session.accessToken];
             }
@@ -667,6 +688,12 @@ RCT_EXPORT_METHOD(performSearchWithQuery:(NSString *)searchQuery
         [self sendEventWithName:notification.name body:notification.userInfo];
     }
 }
-
+-(void)audioStreamingDidLogin:(SPTAudioStreamingController *)audioStreaming {
+    [self setPlayer:audioStreaming];
+}
+-(void)audioStreaming:(SPTAudioStreamingController *)audioStreaming didEncounterError:(NSError *)error {
+    NSLog(@"%@", error.debugDescription);
+    [self checkSession];
+}
 
 @end
